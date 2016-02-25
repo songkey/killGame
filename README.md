@@ -1,2 +1,0 @@
-# killGame
-redis based game
