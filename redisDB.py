@@ -1,8 +1,8 @@
 import redis
 
 class redisDB:
-  def __init__(self):
-    self.host = "localhost"
+  def __init__(self, hostName):
+    self.host = hostName
     self.port = 6379
 
   def write(self, key, val):
