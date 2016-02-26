@@ -1,9 +1,16 @@
 import redisDB
 import json
+
 class GameServer:
   def __init__(self, MemberNum):
     db = redisDB("120.27.29.9")
+    self.Stage = none
+    self.Round = 0
     self.MemberNum = MemberNum
+
+    self.MembersList = []
+    self.Members = {}
+
     self.setState("none", 0, MemberNum)
 
   # Stage : none, start, end
@@ -19,7 +26,7 @@ class GameServer:
     objs = json.loads(val)
     return objs["Stage"], int(objs["Round"]), int(objs["MemberNum"])
     
-  def getMembers(self):
+  def getMembersList(self):
     val = self.db.read("global_Members")
     objs = json.loads(val)
     if len(objs) <= self.MemberNum : return objs
