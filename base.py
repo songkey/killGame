@@ -2,8 +2,7 @@ import redisDB
 import json
 
 class GameBase:
-  def __init__(self, Name = "nil"):
-    self.db = redisDB("120.27.29.9")
+  def __init__(self, ip, Name = "nil"):
 
     self.name = Name
 
@@ -28,7 +27,8 @@ class GameBase:
        "global_state_statement_vote", \
        "global_state_current_member", \
        "global_state_statement", \
-       "global_state_vote" \
+       "global_state_vote", \
+       "global_members_list_str" \
     ]
 
   def getState(self):
@@ -39,8 +39,9 @@ class GameBase:
     self.KillerNum = int(tmpVal[3])
     self.StatementVote = tmpVal[4]
     self.CurrentMember = int(tmpVal[5])
-    self.StatementList = tmpVal[6].split("_")
+    self.StatementList = tmpVal[6].split("^")
     self.Vote = int(tmpVal[7])    
+    self.MembersList = tmpVal[8].split("^")
 
   def setStat(self):
     tmpKV = {}
@@ -50,9 +51,9 @@ class GameBase:
     tmpKV["global_state_killernum"] = str(self.KillerNum)
     tmpKV["global_state_statement_vote"] = self.StatementVote
     tmpKV["global_state_current_member"] = str(self.CurrentMember)
-    tmpKV["global_state_statement"] = "_".join(self.StatementList)
+    tmpKV["global_state_statement"] = "^".join(self.StatementList)
     tmpKV["global_state_vote"] = str(self.Vote)
-
+    tmpKV["global_members_list_str"] = "^".join(self.MembersList)
     self.db.kmset(tmpKV)
 
   def setSVCurrent(self):
@@ -73,6 +74,16 @@ class GameBase:
   def setVote(self):
     self.db.kset("global_state_vote", str(self.Vote))
 
+  # just for client
+  def lsetName(self):
+    return self.db.lpush("global_members_list", self.Name)
+
+  def lgetNmaes(self):
+    self.MembersList = lrange("global_members_list", 0, self.MemberNum)
+
+  def lgetLength(self):
+    return self.db.llength("global_members_list")
+
   def setStageRound(self):
     tmpKV = {}
     tmpKV["global_state_stage"] = self.Stage
@@ -83,21 +94,5 @@ class GameBase:
   def setRound(self):
     self.db.kset("global_state_round", str(self.Round))
 
-  def getStage(self):
-    
-
-  def getStage(self):
-    return self.db.read(self.StageKey)
-
-  def getRound(self):
-    return self.db.read(self.RoundKey)
-
-  def getMemberNum(self):
-    return self.db.read(self.MemberNumKey)
-
-  def addMyname(self):
-    self.db.listAdd(self.MembersListKey, self.name)
-  
-  def getMembersList(self):
-    return self.db.getList(self.MembersListKey, 0, self.MemberNum - 1)
-    
+  def setMembersList(self):
+    tself.db.kset("global_members_list_str", "^".join(self.MembersList))

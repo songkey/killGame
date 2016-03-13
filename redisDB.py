@@ -35,17 +35,23 @@ class redisDB:
     except Exception, exception:
       print exception
     
-  def listAdd(self, key, val):
+  def lpush(self, key, val):
     try:
-      if r == None : r = redis.StrictRedis(host=self.host, port=self.port)
-      return r.lpush(key, val)
+      r = redis.StrictRedis(host=self.host, port=self.port)
+      return r.rpush(key, val)
     except Exception, exception:
       print exception
 
-  def getList(self, key, start, end):
+  def lrange(self, key, start, end):
     try:
-      if r == None : r = redis.StrictRedis(host=self.host, port=self.port)
+      r = redis.StrictRedis(host=self.host, port=self.port)
       return r.lrange(key, start, end)
     except Exception, exception:
       print exception
      
+  def llength(self, key):
+    try:
+      r = redis.StrictRedis(host=self.host, port=self.port)
+      return r.llength(key)
+    except Exception, exception:
+      print exception
