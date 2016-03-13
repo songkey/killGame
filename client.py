@@ -9,14 +9,18 @@ class GameClient:
     self.StageKey = "global_state_stage"
     self.RoundKey = "global_state_round"
     self.MemberNumKey = "global_state_membernum"
+    self.KillerNumKey = "global_state_killernum"
+    self.CurrentMemberKey = "global_state_current_member"
+    self.StatementKey = "global_state_statement"
+    self.VoteKey = "global_state_vote"
 
     self.name = Name
     self.Stage = none
     self.Round = 0
     self.MemberNum = 0
-    
+    self.KillerNum = 0
     self.MembersList = []
-    self.Members = {}
+    
 
   def getStage(self):
     return self.db.read(self.StageKey)
